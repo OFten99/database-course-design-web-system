@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}收费退费 - 医院门诊系统{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">Payments</div>
+    <h1>收费退费</h1>
+    <p>对待收费处方收费（扣减库存），对已收费处方退费（恢复库存）</p>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>待收费处方（{{ waiting|length }} 张）</h2>
+  <div class="table-wrap small">
+    <table>
+      <thead>
+        <tr><th>处方号</th><th>患者</th><th>医生</th><th>开方日期</th><th>金额（元）</th><th>收费操作</th></tr>
+      </thead>
+      <tbody>
+        {% for w in waiting %}
+        <tr>
+          <td><code>{{ w.prescription_no }}</code></td>
+          <td>{{ w.patient_name }}</td>
+          <td>{{ w.doctor_name }}</td>
+          <td>{{ w.prescribe_date }}</td>
+          <td><strong>{{ '%.2f'|format(w.total_amount or 0) }}</strong></td>
+          <td>
+            <form method="post" class="inline-form">
+              <input type="hidden" name="action" value="charge">
+              <input type="hidden" name="prescription_id" value="{{ w.prescription_id }}">
+              <select name="pay_method" required>
+                <option value="微信">微信</option><option value="支付宝">支付宝</option>
+                <option value="现金">现金</option><option value="医保">医保</option>
+              </select>
+              <button type="submit">收费</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">暂无待收费处方</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>已收费 / 已退费处方</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>处方号</th><th>患者</th><th>医生</th><th>金额</th><th>状态</th><th>收费单号</th><th>支付方式</th><th>收费时间</th><th>退费时间</th><th>退费原因</th><th>操作</th></tr>
+      </thead>
+      <tbody>
+        {% for c in charged %}
+        <tr>
+          <td><code>{{ c.prescription_no }}</code></td>
+          <td>{{ c.patient_name }}</td>
+          <td>{{ c.doctor_name }}</td>
+          <td>{{ '%.2f'|format(c.total_amount or 0) }}</td>
+          <td><span class="badge">{{ c.prescription_status }}</span></td>
+          <td><code>{{ c.payment_no or '-' }}</code></td>
+          <td>{{ c.pay_method or '-' }}</td>
+          <td>{{ c.pay_time.strftime('%Y-%m-%d %H:%M') if c.pay_time else '-' }}</td>
+          <td>{{ c.refund_time.strftime('%Y-%m-%d %H:%M') if c.refund_time else '-' }}</td>
+          <td>{{ c.refund_reason or '-' }}</td>
+          <td>
+            {% if c.prescription_status == '已收费' %}
+            <form method="post" class="inline-form" onsubmit="return confirm('确定退费？药品库存将恢复。')">
+              <input type="hidden" name="action" value="refund">
+              <input type="hidden" name="prescription_id" value="{{ c.prescription_id }}">
+              <input type="hidden" name="reason" value="患者申请退费">
+              <button class="danger-btn" type="submit">退费</button>
+            </form>
+            {% else %}-{% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="11">暂无收费记录</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

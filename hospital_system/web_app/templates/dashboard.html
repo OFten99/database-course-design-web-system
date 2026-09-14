@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}首页 - 医院门诊系统{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">Dashboard</div>
+    <h1>门诊运营看板</h1>
+    <p>{{ now.strftime('%Y-%m-%d') }} 今日门诊数据概览</p>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat"><span>今日挂号数</span><strong>{{ stats.today_reg }}</strong></div>
+  <div class="stat"><span>今日已就诊</span><strong>{{ stats.today_visited }}</strong></div>
+  <div class="stat"><span>待收费处方</span><strong>{{ stats.waiting_pres }}</strong></div>
+  <div class="stat"><span>今日收费金额（元）</span><strong>{{ '%.2f'|format(stats.today_income) }}</strong></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <h2>今日各科室挂号</h2>
+    <div class="table-wrap small">
+      <table>
+        <thead>
+          <tr><th>科室</th><th>挂号数</th><th>普通号</th><th>专家号</th><th>挂号费合计</th><th>退号</th></tr>
+        </thead>
+        <tbody>
+          {% for row in reg_by_dept %}
+          <tr>
+            <td>{{ row.department_name }}</td>
+            <td>{{ row.registration_count }}</td>
+            <td>{{ row.normal_count }}</td>
+            <td>{{ row.expert_count }}</td>
+            <td>{{ '%.2f'|format(row.total_fee or 0) }}</td>
+            <td>{{ row.cancelled_count }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6">今日暂无挂号数据</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>今日挂号队列</h2>
+    <div class="table-wrap small">
+      <table>
+        <thead>
+          <tr><th>排队号</th><th>患者</th><th>科室</th><th>医生</th><th>号别</th><th>状态</th></tr>
+        </thead>
+        <tbody>
+          {% for row in today_occupied %}
+          <tr>
+            <td>{{ row.queue_no }}</td>
+            <td>{{ row.patient_name }}</td>
+            <td>{{ row.department_name }}</td>
+            <td>{{ row.doctor_name }}</td>
+            <td><span class="badge">{{ row.reg_type }}</span></td>
+            <td>{{ row.visit_status }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6">今日暂无挂号</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

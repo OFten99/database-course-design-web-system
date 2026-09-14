@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}医院门诊管理系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if current_user %}
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">+</div>
+      <div>
+        <strong>医院门诊系统</strong>
+        <span>HIS Web 管理端</span>
+      </div>
+    </div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">首页</a>
+      {% if role_allowed('patients') %}<a href="{{ url_for('patients') }}">患者档案</a>{% endif %}
+      {% if role_allowed('registrations') %}<a href="{{ url_for('registrations') }}">挂号管理</a>{% endif %}
+      {% if role_allowed('schedules') %}<a href="{{ url_for('schedules') }}">医生排班</a>{% endif %}
+      {% if role_allowed('prescriptions') %}<a href="{{ url_for('prescriptions') }}">处方开具</a>{% endif %}
+      {% if role_allowed('payments') %}<a href="{{ url_for('payments') }}">收费退费</a>{% endif %}
+      {% if role_allowed('medicines') %}<a href="{{ url_for('medicines') }}">药品目录</a>{% endif %}
+      {% if role_allowed('reports') %}<a href="{{ url_for('reports') }}">报表查询</a>{% endif %}
+      <a href="{{ url_for('codes') }}">编号参考</a>
+    </nav>
+    <div class="user-card">
+      <strong>{{ current_user.user_name }}</strong>
+      <span>{{ current_user.role_name }} / {{ current_user.username }}</span>
+      <a class="logout" href="{{ url_for('logout') }}">退出登录</a>
+    </div>
+  </aside>
+  {% endif %}
+
+  <main class="{% if current_user %}main{% else %}login-main{% endif %}">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

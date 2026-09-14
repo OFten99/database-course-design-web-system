@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}首页 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Dashboard</p>
+    <h1>系统首页</h1>
+    <p>当前登录：{{ current_user.employee_name }}，角色：{{ current_user.role_name }}</p>
+  </div>
+  <a class="secondary-btn" href="{{ url_for('codes') }}">查看编号参考</a>
+</section>
+
+<section class="stat-grid">
+  <div class="stat"><span>客房总数</span><strong>{{ stats.room_count }}</strong></div>
+  <div class="stat"><span>空闲客房</span><strong>{{ stats.free_room_count }}</strong></div>
+  <div class="stat"><span>入住中订单</span><strong>{{ stats.living_order_count }}</strong></div>
+  <div class="stat"><span>在职员工</span><strong>{{ stats.employee_count }}</strong></div>
+</section>
+
+<section class="grid-2">
+  <div class="panel">
+    <h2>当前入住</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>房号</th><th>客户</th><th>订单号</th><th>入住时间</th></tr></thead>
+        <tbody>
+          {% for row in occupied_rooms %}
+          <tr>
+            <td>{{ row.room_no }}</td>
+            <td>{{ row.customer_name }}</td>
+            <td><code>{{ row.order_no }}</code></td>
+            <td>{{ row.checkin_time }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">暂无入住中客房</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>月度营收</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>月份</th><th>订单数</th><th>总收入</th></tr></thead>
+        <tbody>
+          {% for row in revenue_rows %}
+          <tr>
+            <td>{{ row.revenue_month }}</td>
+            <td>{{ row.checkout_order_count }}</td>
+            <td>{{ row.total_revenue }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3">暂无营收数据</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

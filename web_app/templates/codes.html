@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}编号参考 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Codes</p>
+    <h1>编号参考</h1>
+    <p>网页表单里需要的部门编号、岗位编号、角色编号、客户编号、客房编号、员工编号都可以在这里查看。</p>
+  </div>
+</section>
+
+<section class="grid-2">
+  <div class="panel">
+    <h2>部门编号</h2>
+    <div class="table-wrap small"><table><thead><tr><th>编号</th><th>部门</th></tr></thead><tbody>
+      {% for row in data.departments %}<tr><td>{{ row.department_id }}</td><td>{{ row.department_name }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+  <div class="panel">
+    <h2>角色编号</h2>
+    <div class="table-wrap small"><table><thead><tr><th>编号</th><th>编码</th><th>角色</th></tr></thead><tbody>
+      {% for row in data.roles %}<tr><td>{{ row.role_id }}</td><td>{{ row.role_code }}</td><td>{{ row.role_name }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>岗位编号</h2>
+  <div class="table-wrap"><table><thead><tr><th>编号</th><th>岗位</th><th>部门编号</th></tr></thead><tbody>
+    {% for row in data.positions %}<tr><td>{{ row.position_id }}</td><td>{{ row.position_name }}</td><td>{{ row.department_id }}</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+
+<section class="grid-2">
+  <div class="panel">
+    <h2>客房编号</h2>
+    <div class="table-wrap"><table><thead><tr><th>编号</th><th>房号</th><th>状态</th></tr></thead><tbody>
+      {% for row in data.rooms %}<tr><td>{{ row.room_id }}</td><td>{{ row.room_no }}</td><td>{{ row.room_status }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+  <div class="panel">
+    <h2>客户编号</h2>
+    <div class="table-wrap"><table><thead><tr><th>编号</th><th>客户</th><th>电话</th></tr></thead><tbody>
+      {% for row in data.customers %}<tr><td>{{ row.customer_id }}</td><td>{{ row.customer_name }}</td><td>{{ row.phone }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>员工编号</h2>
+  <div class="table-wrap"><table><thead><tr><th>编号</th><th>工号</th><th>姓名</th></tr></thead><tbody>
+    {% for row in data.employees %}<tr><td>{{ row.employee_id }}</td><td>{{ row.employee_no }}</td><td>{{ row.employee_name }}</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endblock %}

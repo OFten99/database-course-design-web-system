@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}报表查询 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Reports</p>
+    <h1>报表查询</h1>
+    <p>展示当前占用客房、月度营收、员工考勤汇总和薪资汇总，可导出 CSV。</p>
+  </div>
+  <div class="actions">
+    <a class="secondary-btn" href="{{ url_for('export_csv', name='revenue') }}">导出营收</a>
+    <a class="secondary-btn" href="{{ url_for('export_csv', name='salary') }}">导出薪资</a>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>当前占用客房</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>房号</th><th>房型</th><th>客户</th><th>电话</th><th>订单号</th><th>入住时间</th><th>前台</th></tr></thead>
+      <tbody>
+        {% for row in data.occupied %}
+        <tr>
+          <td>{{ row.room_no }}</td><td>{{ row.type_name }}</td><td>{{ row.customer_name }}</td>
+          <td>{{ row.customer_phone }}</td><td><code>{{ row.order_no }}</code></td>
+          <td>{{ row.checkin_time }}</td><td>{{ row.receptionist_name }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">暂无占用客房</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>月度客房营收</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>月份</th><th>退房订单数</th><th>房费</th><th>其他消费</th><th>总收入</th></tr></thead>
+      <tbody>
+        {% for row in data.revenue %}
+        <tr>
+          <td>{{ row.revenue_month }}</td><td>{{ row.checkout_order_count }}</td>
+          <td>{{ row.room_fee_amount }}</td><td>{{ row.extra_fee_amount }}</td><td>{{ row.total_revenue }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">暂无营收数据</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>员工月度考勤汇总</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>月份</th><th>员工</th><th>部门</th><th>考勤天数</th><th>正常</th><th>迟到</th><th>早退</th><th>缺勤</th></tr></thead>
+      <tbody>
+        {% for row in data.attendance %}
+        <tr>
+          <td>{{ row.attendance_month }}</td><td>{{ row.employee_name }}（{{ row.employee_no }}）</td>
+          <td>{{ row.department_name }}</td><td>{{ row.attendance_days }}</td>
+          <td>{{ row.normal_days }}</td><td>{{ row.late_days }}</td><td>{{ row.early_leave_days }}</td><td>{{ row.absent_days }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>薪资汇总</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>月份</th><th>员工</th><th>基本工资</th><th>保洁</th><th>前台</th><th>维修</th><th>加班</th><th>扣款</th><th>实发</th></tr></thead>
+      <tbody>
+        {% for row in data.salary %}
+        <tr>
+          <td>{{ row.salary_month }}</td><td>{{ row.employee_name }}（{{ row.employee_no }}）</td>
+          <td>{{ row.base_salary }}</td><td>{{ row.cleaning_bonus }}</td><td>{{ row.reception_bonus }}</td>
+          <td>{{ row.repair_bonus }}</td><td>{{ row.overtime_pay }}</td><td>{{ row.attendance_deduction }}</td><td>{{ row.actual_salary }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

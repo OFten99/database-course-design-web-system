@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}客房管理 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Rooms</p>
+    <h1>客房管理</h1>
+    <p>管理客房基础信息和房态，办理入住时只能选择空闲客房。</p>
+  </div>
+</section>
+
+<section class="grid-2">
+  <form class="form-card" method="post">
+    <input type="hidden" name="action" value="add">
+    <h2>新增客房</h2>
+    <label>房号 <input name="room_no" placeholder="例如 501" required></label>
+    <label>楼层 <input name="floor_no" type="number" min="1" placeholder="例如 5" required></label>
+    <label>房型
+      <select name="room_type_id" required>
+        {% for item in room_types %}
+        <option value="{{ item.room_type_id }}">{{ item.room_type_id }} - {{ item.type_name }}（{{ item.standard_price }} 元）</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>备注 <input name="remark" placeholder="可空"></label>
+    <button type="submit">新增客房</button>
+  </form>
+
+  <form class="form-card" method="post">
+    <input type="hidden" name="action" value="status">
+    <h2>修改房态</h2>
+    <label>客房编号 <input name="room_id" type="number" min="1" required></label>
+    <label>新状态
+      <select name="room_status">
+        <option>空闲</option>
+        <option>入住</option>
+        <option>维修</option>
+        <option>待打扫</option>
+      </select>
+    </label>
+    <button type="submit">更新状态</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>客房列表</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>编号</th><th>房号</th><th>楼层</th><th>房型</th><th>价格</th><th>状态</th><th>备注</th><th>操作</th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row.room_id }}</td>
+          <td>{{ row.room_no }}</td>
+          <td>{{ row.floor_no }}</td>
+          <td>{{ row.type_name }}</td>
+          <td>{{ row.standard_price }}</td>
+          <td><span class="badge">{{ row.room_status }}</span></td>
+          <td>{{ row.remark or '' }}</td>
+          <td>
+            <form method="post" class="inline-form" onsubmit="return confirm('确认删除该客房？')">
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="room_id" value="{{ row.room_id }}">
+              <button class="danger-btn" type="submit">删除</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

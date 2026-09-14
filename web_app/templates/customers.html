@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}客户管理 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Customers</p>
+    <h1>客户管理</h1>
+    <p>手机号和身份证号不能重复，办理入住前需要先有客户档案。</p>
+  </div>
+</section>
+
+<section class="grid-2">
+  <form class="form-card" method="post">
+    <input type="hidden" name="action" value="add">
+    <h2>新增客户</h2>
+    <label>客户姓名 <input name="customer_name" placeholder="例如 钱一" required></label>
+    <label>身份证号 <input name="id_card" placeholder="例如 310101199905050055" required></label>
+    <label>联系电话 <input name="phone" placeholder="例如 13900000005" required></label>
+    <label>会员等级
+      <select name="member_level">
+        <option>普通</option><option>银卡</option><option>金卡</option><option>钻石</option>
+      </select>
+    </label>
+    <button type="submit">新增客户</button>
+  </form>
+
+  <form class="form-card" method="post">
+    <input type="hidden" name="action" value="update">
+    <h2>修改客户</h2>
+    <label>客户编号 <input name="customer_id" type="number" min="1" required></label>
+    <label>新联系电话 <input name="phone" required></label>
+    <label>新会员等级
+      <select name="member_level">
+        <option>普通</option><option>银卡</option><option>金卡</option><option>钻石</option>
+      </select>
+    </label>
+    <button type="submit">保存修改</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>客户列表</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>编号</th><th>姓名</th><th>身份证号</th><th>电话</th><th>等级</th><th>积分</th><th>操作</th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row.customer_id }}</td>
+          <td>{{ row.customer_name }}</td>
+          <td>{{ row.id_card }}</td>
+          <td>{{ row.phone }}</td>
+          <td>{{ row.member_level }}</td>
+          <td>{{ row.points }}</td>
+          <td>
+            <form method="post" class="inline-form" onsubmit="return confirm('确认删除该客户？')">
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="customer_id" value="{{ row.customer_id }}">
+              <button class="danger-btn" type="submit">删除</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

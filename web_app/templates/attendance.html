@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}考勤登记 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Attendance</p>
+    <h1>考勤登记</h1>
+    <p>同一员工同一天重复登记时，会自动覆盖原考勤记录。</p>
+  </div>
+</section>
+
+<form class="form-card wide-form" method="post">
+  <div class="form-grid">
+    <label>员工
+      <select name="employee_id" required>
+        {% for item in employees %}
+        <option value="{{ item.employee_id }}">{{ item.employee_id }} - {{ item.employee_name }}（{{ item.employee_no }}）</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>考勤日期 <input name="attendance_date" type="date" required></label>
+    <label>上班打卡时间 <input name="check_in_time" placeholder="2026-07-14 08:00:00"></label>
+    <label>下班打卡时间 <input name="check_out_time" placeholder="2026-07-14 16:00:00"></label>
+    <label>考勤状态
+      <select name="attendance_status">
+        <option>正常</option><option>迟到</option><option>早退</option><option>缺勤</option>
+      </select>
+    </label>
+  </div>
+  <button type="submit">保存考勤</button>
+</form>
+
+<section class="panel">
+  <h2>最近考勤记录</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>员工</th><th>日期</th><th>上班</th><th>下班</th><th>状态</th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row.employee_name }}（{{ row.employee_no }}）</td>
+          <td>{{ row.attendance_date }}</td>
+          <td>{{ row.check_in_time or '' }}</td>
+          <td>{{ row.check_out_time or '' }}</td>
+          <td><span class="badge">{{ row.attendance_status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

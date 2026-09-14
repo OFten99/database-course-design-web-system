@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}登录 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="login-panel">
+  <div class="login-copy">
+    <p class="eyebrow">Hotel HR System</p>
+    <h1>酒店人事一体化综合管理系统</h1>
+    <p>使用测试账号登录后，可在网页端完成客房、客户、员工、入住、退房、考勤、薪资和报表操作。</p>
+    <div class="hint-box">
+      <strong>测试账号</strong>
+      <p><code>front01 / 123456</code>：前台业务</p>
+      <p><code>finance01 / 123456</code>：薪资和报表</p>
+    </div>
+  </div>
+  <form class="form-card login-form" method="post">
+    <h2>系统登录</h2>
+    <label>用户名
+      <input name="username" placeholder="例如 front01" required>
+    </label>
+    <label>密码
+      <input name="password" type="password" placeholder="默认 123456" required>
+    </label>
+    <button type="submit">登录</button>
+  </form>
+</section>
+{% endblock %}

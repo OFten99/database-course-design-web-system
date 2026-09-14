@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}退房结算 - 酒店人事系统{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Check-out</p>
+    <h1>退房结算</h1>
+    <p>选择入住中的订单后提交，系统会调用退房结算存储过程，自动计算房费和消费金额。</p>
+  </div>
+</section>
+
+<form class="form-card wide-form" method="post">
+  <label>入住中订单
+    <select name="order_id" required>
+      {% for item in orders %}
+      <option value="{{ item.order_id }}">
+        {{ item.order_id }} - {{ item.order_no }} / {{ item.customer_name }} / 房号 {{ item.room_no }} / 入住 {{ item.checkin_time }}
+      </option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">确认退房结算</button>
+  <p class="form-tip">退房后客房状态会由触发器自动改为“待打扫”。</p>
+</form>
+
+<section class="panel">
+  <h2>入住中订单</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>订单编号</th><th>订单号</th><th>客户</th><th>房号</th><th>入住时间</th><th>押金</th></tr></thead>
+      <tbody>
+        {% for row in orders %}
+        <tr>
+          <td>{{ row.order_id }}</td>
+          <td><code>{{ row.order_no }}</code></td>
+          <td>{{ row.customer_name }}</td>
+          <td>{{ row.room_no }}</td>
+          <td>{{ row.checkin_time }}</td>
+          <td>{{ row.deposit_amount }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">暂无入住中订单</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

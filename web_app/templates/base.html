@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}酒店人事一体化综合管理系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if current_user %}
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div>
+        <strong>酒店人事系统</strong>
+        <span>Web 管理端</span>
+      </div>
+    </div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">首页</a>
+      {% if role_allowed('rooms') %}<a href="{{ url_for('rooms') }}">客房管理</a>{% endif %}
+      {% if role_allowed('customers') %}<a href="{{ url_for('customers') }}">客户管理</a>{% endif %}
+      {% if role_allowed('employees') %}<a href="{{ url_for('employees') }}">员工管理</a>{% endif %}
+      {% if role_allowed('checkin') %}<a href="{{ url_for('checkin') }}">办理入住</a>{% endif %}
+      {% if role_allowed('checkout') %}<a href="{{ url_for('checkout') }}">退房结算</a>{% endif %}
+      {% if role_allowed('attendance') %}<a href="{{ url_for('attendance') }}">考勤登记</a>{% endif %}
+      {% if role_allowed('salary') %}<a href="{{ url_for('salary') }}">薪资管理</a>{% endif %}
+      {% if role_allowed('reports') %}<a href="{{ url_for('reports') }}">报表查询</a>{% endif %}
+      <a href="{{ url_for('codes') }}">编号参考</a>
+    </nav>
+    <div class="user-card">
+      <strong>{{ current_user.employee_name }}</strong>
+      <span>{{ current_user.role_name }} / {{ current_user.username }}</span>
+      <a class="logout" href="{{ url_for('logout') }}">退出登录</a>
+    </div>
+  </aside>
+  {% endif %}
+
+  <main class="{% if current_user %}main{% else %}login-main{% endif %}">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

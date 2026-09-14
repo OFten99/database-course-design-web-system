@@ -1,0 +1,32 @@
+# Python 运行时
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 工具缓存与本地临时目录
+.trae-html-share-packages/
+.uploads/
+新建文件夹/
+
+# 课程内部资料（含题目/学校信息，默认不公开，如需公开请删除本行）
+hotel system/酒店人事一体化综合管理系统数据库设计与开发题目.docx
+
+# 一次性辅助脚本（端口调整等）
+hotel system/change_port.py
+
+# Web 导出目录
+web_app/exports/
+hospital_system/web_app/exports/
+
+# 系统与编辑器
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
+*.log
